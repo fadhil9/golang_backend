@@ -24,7 +24,7 @@ func main() {
 	})
 
 	router.GET("/halo/:name", func(c *gin.Context) {
-		name := c.param("name")
+		name := c.Param("name")
 		c.JSON(200, gin.H{
 			"message": "halo" + name + "!",
 		})
@@ -32,8 +32,8 @@ func main() {
 
 	router.POST("/login", func(c *gin.Context) {
 		var loginData struct {
-			Email    string `json : "email"`
-			Password string `json : "Password"`
+			Email    string `json:"email"`
+			Password string `json:"Password"`
 		}
 
 		if err := c.ShouldBindJSON(&loginData); err != nil {
@@ -46,8 +46,33 @@ func main() {
 		//disini bisa lakuin validasi login, kaya meriksa didatabase.
 		//contoh sederhana meriksa apakah email dan password cocok.
 		if loginData.Email == "xxx.gmail.com" && loginData.Password == "admin123pdn" {
-
+			c.JSON(200, gin.H{
+				"message": "Login succesful",
+			})
+		} else {
+			c.JSON(401, gin.H{
+				"error": "Invalid credentials",
+			})
 		}
 
 	})
+
+	//menambahkan endpoint  untuk mengambil parameter query
+	router.GET("/user", func(c *gin.Context) {
+		name := c.Query("name")
+
+		if name == "" {
+			c.JSON(400, gin.H{
+				"error": "Name parameter is missing",
+			})
+			return
+		}
+
+		c.JSON(200, gin.H{
+			"message": "Hello " + name + " !",
+		})
+	})
+
+	//menjalankan server
+	router.Run(":8080")
 }

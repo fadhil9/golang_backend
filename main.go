@@ -26,7 +26,7 @@ func main() {
 	router.GET("/halo/:name", func(c *gin.Context) {
 		name := c.Param("name")
 		c.JSON(200, gin.H{
-			"message": "halo" + name + "!",
+			"message": "halo " + name + "!",
 		})
 	})
 
